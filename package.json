@@ -1,0 +1,24 @@
+{
+  "name": "cryptobidding-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinSquared/CryptoBidding-Backend.git"
+  },
+  "author": "Kevin Wu & Kevin Zou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KevinSquared/CryptoBidding-Backend/issues"
+  },
+  "homepage": "https://github.com/KevinSquared/CryptoBidding-Backend#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "form-data": "^4.0.0",
+    "node-fetch": "^3.2.3"
+  }
+}
