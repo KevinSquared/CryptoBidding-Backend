@@ -1,16 +1,24 @@
-const express = require('express');
-const app = express();
-let cors = require('cors');
-
-const http = require('http');
-const server = http.createServer(app);
-
-app.use(cors());
-
+import express from 'express'
+import cors from 'cors'
+import http from 'http';
+import { Server as socketio } from 'socket.io';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
+
+const app = express();
+const server = http.createServer(app);
+app.use(cors());
+
+// Setup server socket
+const io = new socketio(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -28,4 +36,45 @@ const firebaseConfig = initializeApp({
 
 const db = getFirestore();
 
-server.listen(80);
+// Game state
+const games = {}
+
+io.on('connection', (socket) => {
+  console.log('connection!', socket.id)
+
+  socket.on('disconnect', (reason) => {
+    console.log('disconnect:', reason);
+  });
+
+  // New game started or joined
+  socket.on('startGame', (data) => {
+    const { roomCode, nickname } = data
+    const room = io.of(`/${roomCode}`)
+    // Find out which game it is and get its current state
+    if (!games[roomCode]) {
+      games[roomCode] = {
+        players: [],
+        status: 'notStarted',
+        namespace: room,
+      }
+    }
+
+    games[roomCode].players.push({ nickname })
+
+    // Tell other clients in namespace that a new player has joined their lobby
+    io.sockets.emit('newPlayer', games[roomCode].players)
+  });
+
+  // Start from lobby
+  socket.on('start', (data) => {
+    const { roomCode } = data
+
+    games[roomCode].status = 'started'
+
+    io.sockets.emit('started')
+  })
+});
+
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});
