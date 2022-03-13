@@ -6,13 +6,13 @@ const basePath = process.cwd();
 import fs from 'fs';
 
 export const uploadPhoto = (photos) => {
-    photos
+    fs.readdirSync(`./`)
     .forEach((file, idx) => {
         const formData = new FormData();
         const fileStream = fs.createReadStream(`${basePath}/images/${file}`);
         formData.append("file", fileStream);
     
-        let url = 'https://api.nftport.xyz/v0/files';
+        let url = 'https://api.nftport.xyz/v0/metadata';
     
         let options = {
             method: 'POST',

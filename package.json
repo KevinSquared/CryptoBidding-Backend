@@ -17,8 +17,12 @@
   },
   "homepage": "https://github.com/KevinSquared/CryptoBidding-Backend#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.3",
+    "firebase": "^9.4.1",
     "form-data": "^4.0.0",
+    "http": "^0.0.1-security",
     "node-fetch": "^3.2.3"
-  }
+  },
+  "type": "module"
 }
